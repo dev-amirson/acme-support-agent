@@ -85,6 +85,8 @@ const envSchema = z
     AUTO_MIGRATE: bool.default(true),
     AUTO_INGEST: bool.default(true),
     CORS_ORIGINS: z.string().default(''),
+    /** Origins allowed to embed the UI in an iframe, e.g. https://huggingface.co for Spaces. */
+    FRAME_ANCESTORS: z.string().default(''),
     TRUST_PROXY: bool.default(true),
     KB_DIR: z.string().default(path.join(repoRoot, 'knowledge-base')),
     MIGRATIONS_DIR: z.string().default(path.join(repoRoot, 'apps/server/drizzle')),
@@ -113,6 +115,7 @@ export interface AppConfig {
   env: Env;
   isProd: boolean;
   corsOrigins: string[];
+  frameAncestors: string[];
   reasoningEffort: Exclude<Env['OPENAI_REASONING_EFFORT'], ''> | null;
 }
 
@@ -133,6 +136,9 @@ export function loadConfig(source: NodeJS.ProcessEnv = process.env): AppConfig {
     env,
     isProd: env.NODE_ENV === 'production',
     corsOrigins: env.CORS_ORIGINS.split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+    frameAncestors: env.FRAME_ANCESTORS.split(',')
       .map((s) => s.trim())
       .filter(Boolean),
     reasoningEffort: env.OPENAI_REASONING_EFFORT === '' ? null : env.OPENAI_REASONING_EFFORT,

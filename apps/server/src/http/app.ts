@@ -41,8 +41,12 @@ export function createHttpServer(c: Container, logger: PinoLogger): HttpServer {
           workerSrc: ["'self'", 'blob:'],
           // Only meaningful (and safe) behind TLS; on plain-http localhost it would break every request.
           upgradeInsecureRequests: c.config.isProd ? [] : null,
+          // Hosts that render the app in an iframe (e.g. Hugging Face Spaces) must be allow-listed.
+          frameAncestors: ["'self'", ...c.config.frameAncestors],
         },
       },
+      // CSP frame-ancestors supersedes X-Frame-Options; keep the legacy header only when not embeddable.
+      xFrameOptions: c.config.frameAncestors.length ? false : { action: 'sameorigin' },
       strictTransportSecurity: c.config.isProd,
       crossOriginEmbedderPolicy: false,
     }),

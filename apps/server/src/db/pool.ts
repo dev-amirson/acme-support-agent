@@ -34,9 +34,19 @@ function sslFor(config: AppConfig): pg.PoolConfig['ssl'] {
   return isPrivateHost(url.hostname) ? false : { rejectUnauthorized: true };
 }
 
+/**
+ * Neon and other managed providers append `channel_binding=require`, which node-postgres doesn't
+ * parse from URLs; drop it (TLS still applies via sslmode).
+ */
+export function normalizeDatabaseUrl(raw: string): string {
+  const url = new URL(raw);
+  url.searchParams.delete('channel_binding');
+  return url.toString();
+}
+
 export function createDatabase(config: AppConfig): DatabaseHandle {
   const pool = new pg.Pool({
-    connectionString: config.env.DATABASE_URL,
+    connectionString: normalizeDatabaseUrl(config.env.DATABASE_URL),
     ssl: sslFor(config),
     // Free-tier Postgres allows few connections; keep the pool small and fail fast.
     max: 8,
