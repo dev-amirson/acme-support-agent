@@ -1,0 +1,16 @@
+{
+  "name": "@acme/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared, transport-agnostic contracts: domain types, agent event protocol, voice wire protocol, REST DTOs.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}
