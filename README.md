@@ -227,15 +227,26 @@ triggers a scenario.
 Other commands: `npm test`, `npm run typecheck`, `npm run eval:retrieval -- --judge`,
 `npm run ingest -- --force`, `docker compose --profile full up --build` (production image + DB).
 
-## Deploy (free: Render)
+## Deploy (free, no credit card): Hugging Face Spaces + Neon
 
-1. Push the repo to GitHub.
-2. Render → **New → Blueprint** → select the repo. `render.yaml` creates a free Docker web service and a
-   free Postgres. Paste `OPENAI_API_KEY` when prompted.
-3. Wait for the first deploy. The app migrates and ingests on boot; `/api/ready` turns 200 when done.
+1. **Database:** create a free project at [neon.tech](https://neon.tech) (pgvector included, no expiry) and
+   copy its connection string.
+2. **App:** create a free [Hugging Face](https://huggingface.co) account → **New Space** → SDK **Docker** →
+   hardware **CPU basic (free)** → public. Under **Settings → Variables and secrets** add:
+   - secrets `OPENAI_API_KEY`, `DATABASE_URL` (the Neon URL)
+   - variables `NODE_ENV=production`, `FRAME_ANCESTORS=https://huggingface.co`, `DAILY_BUDGET_USD=3`
+3. **Deploy:** create a Hugging Face *write* token, then from the repo root:
+   ```bash
+   HF_TOKEN=hf_xxx HF_SPACE=<username>/<space> ./scripts/deploy-hf-space.sh
+   ```
+   The Space builds the same Dockerfile, migrates the database and ingests the knowledge base on boot.
+   Share the direct app URL (`https://<username>-<space>.hf.space`) — it opens full-screen with microphone access.
 
-Free tier caveats: the service sleeps after about 15 minutes idle (first hit takes 30–60 s), and the
-free database expires after 30 days. Swap in a free Neon URL for a longer-lived demo.
+Free tier notes: the Space sleeps after 48 h without visits (first visit wakes it in about a minute) and
+Neon pauses idle compute (first query after a pause takes about a second).
+
+**Alternative: Render.** `render.yaml` is a ready Blueprint (Docker web service + Postgres). Render asks
+for a card to verify identity on some accounts; the free plan itself is $0.
 
 ## Key trade-offs
 
