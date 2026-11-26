@@ -1,0 +1,261 @@
+@import 'tailwindcss';
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/atkinson-hyperlegible-mono/400.css';
+
+/*
+ * Design tokens — the Proof8 design system (simple_rhf `styles/tokens.css`), so this UI reads as a
+ * sibling of the Proof8 apps: lime brand, warm hairline borders, 10/12px radii, density tokens.
+ */
+:root {
+  /* Brand */
+  --color-brand: #c6db5c;
+  --color-brand-hover: #98af24;
+  --color-brand-soft: #f4f8e1;
+
+  /* Text */
+  --color-text: #111111;
+  --color-text-muted: #5f5f5f;
+  --color-text-secondary: #5f5f5f;
+  --color-text-disabled: #9a9a94;
+
+  /* App */
+  --color-app-background: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fbfbf9;
+  --color-surface-header: #fafaf8;
+
+  /* Fields */
+  --color-field: #ffffff;
+  --color-field-hover: #fbfbf9;
+  --color-field-disabled: #f2f2ee;
+
+  /* Borders */
+  --color-border-subtle: #e3e3de;
+  --color-border: #d7d7d1;
+  --color-border-default: #d7d7d1;
+  --color-border-strong: #bebeb7;
+
+  /* Semantic */
+  --color-danger: #d32f2f;
+  --color-warning: #ed6c02;
+  --color-info: #0288d1;
+  --color-success: #7fa11b;
+
+  /* Radius / motion / focus */
+  --radius-control: 10px;
+  --radius-compact: 8px;
+  --radius-card: 12px;
+  --transition-control: 160ms ease;
+  --shadow-focus-brand: 0 0 0 3px rgba(198, 219, 92, 0.18);
+  --shadow-focus-danger: 0 0 0 3px rgba(211, 47, 47, 0.12);
+
+  /* Density — expansive (touch) by default */
+  --density-control-height: 58px;
+  --density-button-height: 46px;
+  --density-small-button-height: 38px;
+  --density-icon-button-size: 36px;
+  --density-field-padding-x: 14px;
+  --density-section-padding: 16px;
+  --label-font-size: 0.68rem;
+  --value-font-size: 1rem;
+  --icon-size: 18px;
+}
+
+/* Desktop: compact density */
+@media (min-width: 600px) {
+  :root {
+    --density-control-height: 48px;
+    --density-button-height: 36px;
+    --density-small-button-height: 30px;
+    --density-icon-button-size: 30px;
+    --density-field-padding-x: 10px;
+    --density-section-padding: 12px;
+    --label-font-size: 0.65rem;
+    --value-font-size: 0.95rem;
+    --icon-size: 16px;
+  }
+}
+
+/* `inline` → utilities reference the :root variables directly (no self-referencing cycles). */
+@theme inline {
+  --font-sans: 'Atkinson Hyperlegible', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Atkinson Hyperlegible Mono', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+  --color-brand: var(--color-brand);
+  --color-brand-hover: var(--color-brand-hover);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-background: var(--color-app-background);
+  --color-foreground: var(--color-text);
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-surface-header: var(--color-surface-header);
+  --color-muted: var(--color-surface-muted);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-disabled: var(--color-text-disabled);
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
+  --color-field-hover: var(--color-field-hover);
+  --color-primary: var(--color-brand);
+  --color-primary-foreground: var(--color-text);
+  --color-danger: var(--color-danger);
+  --color-destructive: var(--color-danger);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
+  --color-success: var(--color-success);
+  --color-ring: var(--color-brand);
+
+  --radius-control: var(--radius-control);
+  --radius-compact: var(--radius-compact);
+  --radius-card: var(--radius-card);
+
+  --animate-pulse-soft: pulse-soft 1.6s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.18s ease-out;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus-brand);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Floating-label field shell (Proof8 FieldShell) */
+@layer components {
+  .field-shell__surface {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: var(--density-control-height);
+    padding: 7px var(--density-field-padding-x);
+    background-color: var(--color-field);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-control);
+    transition: var(--transition-control);
+    position: relative;
+  }
+  .field-shell__surface:hover:not([data-disabled='true']) {
+    background-color: var(--color-field-hover);
+  }
+  .field-shell__surface:focus-within {
+    background-color: var(--color-field);
+    border-color: var(--color-text);
+    box-shadow: var(--shadow-focus-brand);
+  }
+  .field-shell__surface[data-invalid='true'] {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 2px rgb(211 47 47 / 12%);
+  }
+  .field-shell__surface[data-disabled='true'] {
+    background-color: var(--color-field-disabled);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+  }
+  .field-shell__label {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: var(--label-font-size);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+  }
+  .field-shell__input {
+    width: 100%;
+    min-width: 0;
+    padding: 4px 0 0;
+    border: 0;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+    font: inherit;
+    font-size: var(--value-font-size);
+    line-height: 1.35;
+    color: var(--color-text);
+  }
+  .field-shell__input:focus-visible {
+    box-shadow: none;
+  }
+  .field-shell__input::placeholder {
+    color: var(--color-text-disabled);
+    opacity: 1;
+  }
+}
+
+/* Markdown inside assistant replies */
+.prose-chat p {
+  margin: 0 0 0.6em;
+}
+.prose-chat p:last-child {
+  margin-bottom: 0;
+}
+.prose-chat ul,
+.prose-chat ol {
+  margin: 0.25em 0 0.6em;
+  padding-left: 1.2em;
+}
+.prose-chat ul {
+  list-style: disc;
+}
+.prose-chat ol {
+  list-style: decimal;
+}
+.prose-chat li {
+  margin: 0.15em 0;
+}
+.prose-chat li::marker {
+  color: var(--color-text-disabled);
+}
+.prose-chat strong {
+  font-weight: 700;
+}
+.prose-chat code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  padding: 0.05em 0.35em;
+  border-radius: 6px;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
