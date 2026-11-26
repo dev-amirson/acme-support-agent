@@ -1,0 +1,42 @@
+# Render Blueprint — free tier. Deploy: Render dashboard → New → Blueprint → select this repo.
+# You'll be prompted for OPENAI_API_KEY (never commit it).
+#
+# Free-tier notes:
+#  - The web service sleeps after ~15 min idle; the first request then takes ~30–60 s (cold start).
+#    Open the URL a minute before a demo.
+#  - Render's free Postgres expires 30 days after creation. For a longer-lived demo, create a free
+#    Neon database (pgvector included), delete the `databases:` block and set DATABASE_URL by hand.
+#  - No release-phase job on free plans, so the app migrates + ingests the knowledge base on boot.
+
+services:
+  - type: web
+    name: acme-support-agent
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: acme-support-db
+          property: connectionString
+      # Spend guardrail for a public demo URL (USD per UTC day, all users combined).
+      - key: DAILY_BUDGET_USD
+        value: "3"
+      - key: LOG_LEVEL
+        value: info
+
+databases:
+  - name: acme-support-db
+    plan: free
+    region: oregon
+    databaseName: acme_support
+    user: acme
+    # Internal network only.
+    ipAllowList: []
