@@ -5,7 +5,7 @@ orchestrator. It chains tools autonomously (verify identity → read billing →
 grounds answers in a pgvector knowledge base, refuses to guess when confidence is low, and shows every
 step, prompt, token and cent in an observability drawer.
 
-**Live demo:** `<your Render URL>` · **Walkthrough:** `<Loom link>`
+**Live demo:** `https://acme-support-agent-production.up.railway.app/` · 
 
 Stack: TypeScript end-to-end. Node 24, Express 5, Drizzle ORM, Postgres + pgvector, Next.js 16 (static
 export), Tailwind v4, Zustand, and the Proof8 design system (Radix primitives + CVA, Atkinson Hyperlegible). AI provider: OpenAI (Responses API, `text-embedding-3-small`,
