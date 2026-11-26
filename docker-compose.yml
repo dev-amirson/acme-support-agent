@@ -1,0 +1,34 @@
+# Local development stack. Postgres runs on 5433 to avoid clashing with any local Postgres on 5432.
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: acme-support-db
+    environment:
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
+      POSTGRES_DB: acme_support
+    ports:
+      - "5433:5432"
+    volumes:
+      - acme-support-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U acme -d acme_support"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    profiles: ["full"]
+    build: .
+    environment:
+      DATABASE_URL: postgres://acme:acme@db:5432/acme_support
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  acme-support-pgdata:

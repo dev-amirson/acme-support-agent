@@ -1,0 +1,39 @@
+{
+  "name": "acme-support-agent",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Customer Support AI Agent — streaming chat + live voice over one agent orchestrator, RAG with confidence guardrails, observability.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run db:up && concurrently -n server,web -c blue,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm run dev -w @acme/server",
+    "dev:web": "npm run dev -w @acme/web",
+    "build": "npm run build -w @acme/web && npm run build -w @acme/server",
+    "start": "npm run start -w @acme/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "ingest": "npm run ingest -w @acme/server",
+    "eval:retrieval": "npm run eval:retrieval -w @acme/server",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.18.20": true,
+    "esbuild@0.25.12": true
+  }
+}

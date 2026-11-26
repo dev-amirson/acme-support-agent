@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+.vercel
+
+# Local-only files (e.g. the assessment brief)
+*.local.md
+
+# Non-secret dev config that should be committed
+!apps/web/.env.development
