@@ -1,0 +1,47 @@
+{
+  "name": "@acme/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent orchestrator, tools, RAG and the chat (SSE) / voice (WebSocket) transports.",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
+    "build": "tsup",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ingest": "tsx --env-file-if-exists=../../.env src/scripts/ingest.ts",
+    "eval:retrieval": "tsx --env-file-if-exists=../../.env src/scripts/eval-retrieval.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@acme/contracts": "*",
+    "cors": "^2.8.6",
+    "drizzle-orm": "^0.45.4",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.5",
+    "gpt-tokenizer": "^4.1.2",
+    "helmet": "^8.3.0",
+    "openai": "^7.65.0",
+    "pg": "^8.23.1",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0",
+    "ws": "^8.23.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.0",
+    "@types/ws": "^8.18.0",
+    "drizzle-kit": "^0.31.11",
+    "pino-pretty": "^13.0.0",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "vitest": "^5.1.2"
+  }
+}
